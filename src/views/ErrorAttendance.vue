@@ -6,7 +6,9 @@
       :style="`background-image: url('${require('@/assets/background-error-handling.svg')}')`"
     >
       <div class="error-text">
-        <h1>Maaf Telah Terjadi Kesalahan Server</h1>
+        <slot>
+          <h1>Maaf Telah Terjadi Kesalahan Server</h1>
+        </slot>
       </div>
     </div>
     <!-- Background Error End -->
@@ -31,8 +33,9 @@ export default {};
   font-family: "Exo", sans-serif;
   color: white;
   position: absolute;
-  top: 49%;
-  left: 24.4%;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 700px;
   /* background-color: rgb(0, 0, 0); */
   text-align: center;

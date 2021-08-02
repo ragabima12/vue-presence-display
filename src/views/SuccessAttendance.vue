@@ -4,22 +4,7 @@
     <div
       class="background-image"
       :style="`background-image: url('${require('@/assets/background-success.svg')}')`"
-    >
-      <div
-        class="image-student"
-        :style="`background-image: url('${studentimageSource}')`"
-      ></div>
-      <div class="title-name-student">
-        <h1 id="fullname">Raga Bima Jr</h1>
-      </div>
-      <div class="class-student">
-        <h1>11 AKL 1</h1>
-      </div>
-
-      <div class="time-coming">
-        <h1>12:00</h1>
-      </div>
-    </div>
+    ></div>
     <!-- Background Success -->
   </div>
 </template>

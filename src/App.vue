@@ -4,9 +4,10 @@
     style="position: absolute; width: 100%; height: 100%; margin: 0; padding: 0"
   >
     <WaitingAttendance v-if="currentPage == 'waiting'" />
-    <ErrorAttendance v-if="currentPage == 'error'" />
+    <ErrorAttendance v-if="currentPage == 'error'">
+      <h1>{{errorMessage}}</h1>
+    </ErrorAttendance>
     <SuccessAttendance v-if="currentPage == 'success'" />
-    {{ studentData }}
   </div>
 </template>
 
@@ -21,9 +22,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      cardId: "",
-
-      studentimageSource: "",
+      cardId: ""
     };
   },
   components: {
@@ -38,23 +37,31 @@ export default {
         id_card: ev,
       };
       this.$store.dispatch("storeAttendance", payload);
-    },
+    }
   },
   mounted() {
-    let io = Socket("http://192.168.0.106:9090");
-    io.on("presence", (studentData) => {
-      this.$store.commit("setStudentData", studentData);
+    let io = Socket(process.env.VUE_APP_SOCKET_HOST);
+    const waitFor = (duration, callback=() => {}) => new Promise((resolve, reject) => typeof callback === 'function' && setTimeout(callback, duration) || resolve(null))
+    io.on("presence", async () => {
       this.$store.commit("setCurrentPage", "success");
-
-      setInterval(() => {
+      await waitFor(2000, () => {
         return this.$store.commit("setCurrentPage", "waiting");
-      }, 3000);
+      })
     });
+
+    io.on('error', async(message) => {
+      this.$store.commit('setCurrentPage', 'error')
+      this.$store.commit('setErrorMessage', message)
+      await waitFor(10000, () => {
+        return this.$store.commit('setCurrentPage', 'waiting')
+      })
+    })
   },
   computed: {
     ...mapGetters({
       currentPage: "getCurrentPage",
       studentData: "getStudentData",
+      errorMessage: 'getErrorMessage'
     }),
   },
 };

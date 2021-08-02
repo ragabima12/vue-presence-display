@@ -1,5 +1,4 @@
 import Axios from 'axios'
-Axios.defaults.withCredentials = true
 
 let responseStatus = {
     isError: false,
@@ -76,11 +75,29 @@ const getStudentImage = async (studentData) => {
 
 }
 
+const getStudentData = async (studentId) => {
+    let response = {... responseStatus}
+    if (typeof studentId !== 'string') {
+        response.isError = true
+        response.reason = `Student ID must be a object, given ${typeof studentId} on Student ID`
+        return response
+    }
 
+    const url = `${process.env.VUE_APP_API_HOST}/api/v1/student/machine?mac=11-23-25-59-50-A8&student=${studentId}`
+    const method = 'GET'
 
-
+    const requestResponse = await Request(url, method, null, null)
+    if (requestResponse.isError) {
+        response.isError = true
+        response.reason = `Error when requesting to API server with error : ${requestResponse.reason}`
+        return response
+    }
+    response.data = requestResponse.data?.data
+    return response
+}
 
 export default {
     storeAttendance,
-    getStudentImage
+    getStudentImage,
+    getStudentData
 }
