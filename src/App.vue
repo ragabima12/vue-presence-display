@@ -52,7 +52,7 @@ export default {
     io.on('error', async(message) => {
       this.$store.commit('setCurrentPage', 'error')
       this.$store.commit('setErrorMessage', message)
-      await waitFor(10000, () => {
+      await waitFor(2000, () => {
         return this.$store.commit('setCurrentPage', 'waiting')
       })
     })
